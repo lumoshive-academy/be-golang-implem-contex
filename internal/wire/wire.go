@@ -4,6 +4,7 @@ import (
 	"session-26/internal/adaptor"
 	"session-26/internal/data/repository"
 	"session-26/internal/usecase"
+	"session-26/pkg/middleware"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -20,5 +21,5 @@ func Wiring(repo repository.Repository) *chi.Mux {
 func wireUser(router *chi.Mux, repo repository.Repository) {
 	usecaseUser := usecase.NewUserUseCase(repo)
 	adaptorUser := adaptor.NewUserAdaptor(usecaseUser)
-	router.Get("/users", adaptorUser.Get)
+	router.With(middleware.Auth).Get("/users", adaptorUser.Get)
 }
